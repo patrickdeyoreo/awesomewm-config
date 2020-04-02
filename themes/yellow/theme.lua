@@ -2,13 +2,13 @@ local gears = require("gears")
 local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
-local os, math, string = os, math, string
+local awesome, client, os, math, string = awesome, client, os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/yellow"
 theme.wallpaper                                 = theme.dir .. "/wall_8.png"
-theme.font                                      = "Meslo LGS Regular 10"
-theme.taglist_font                              = "Meslo LGS Bold 10"
+theme.font                                      = "MesloLGS Nerd Font-10:style=Regular"
+theme.taglist_font                              = "MesloLGS Nerd Font-10:style=Bold"
 theme.tasklist_font                             = "Terminus 10"
 theme.fg_normal                                 = "#e4e4e4"
 theme.fg_focus                                  = "#428bca"
@@ -40,7 +40,7 @@ theme.titlebar_fg_focus                         = "#888888"
 theme.menu_height                               = 16
 theme.menu_width                                = 140
 
-theme.notification_font                         = "Meslo LGS Regular 12"
+theme.notification_font                         = "MesloLGS Nerd Font-12:style=Regular"
 theme.notification_bg                           = "#5cb85c"
 theme.notification_fg                           = "#232323"
 theme.notification_border_width                 = 0
@@ -143,14 +143,14 @@ local separators = lain.util.separators
 
 -- Widgets
 local clock_icon = wibox.widget.imagebox(theme.widget_clock)
-local clock_widget = awful.widget.textclock("<span font=\"Meslo LGS Regular 10\" color=\"#232323\"> %a %d %b  %H:%M</span>")
+local clock_widget = awful.widget.textclock("<span font=\"MesloLGS Nerd Font-10:style=Regular\" color=\"#232323\"> %a %d %b  %H:%M</span>")
 
 -- Calendar
 local calendar = lain.widget.calendar({
     cal = "cal --color=always",
     attach_to = { clock_widget },
     notification_preset = {
-        font = "Meslo LGS Regular 10",
+        font = "MesloLGS Nerd Font-10:style=Regular",
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
@@ -229,7 +229,7 @@ local temp = lain.widget.temp({
 })
 
 
--- FS
+--[[ FS
 local fs_icon = wibox.widget.imagebox(theme.widget_hdd)
 theme.fs = lain.widget.fs({
     notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = theme.font },
@@ -238,9 +238,9 @@ theme.fs = lain.widget.fs({
         widget:set_markup(markup.font(theme.font, markup.fg.color("#232323", fsp)))
     end
 })
+--]]
 
 -- Battery
-
 local bat_icon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat({
     battery = "BAT0",
@@ -341,7 +341,7 @@ local batupd = lain.widget.bat({
 local batbg = wibox.container.background(batbar, "#474747", gears.shape.rectangle)
 local bat_widget = wibox.container.margin(batbg, 2, 7, 4, 4)
 
--- Keyboard layout switcher
+--[[ Keyboard layout switcher
 kbdwidget = wibox.widget.textbox()
 kbdwidget.border_width = 1
 kbdwidget.border_color = "#232323"
@@ -360,6 +360,7 @@ dbus.connect_signal("ru.gentoo.kbdd", function(...)
     kbdwidget:set_markup("<span foreground='#232323'>" .. kbdstrings[layout] .. "</span>")
     end
 )
+--]]
 
 -- Chrome_button
 chrome_button = awful.widget.button({ image = theme.chrome })
@@ -405,7 +406,7 @@ function theme.powerline_rl(cr, width, height)
     cr:close_path()
 end
 
-function theme.connect(s)
+function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
@@ -414,12 +415,13 @@ function theme.connect(s)
     if type(wallpaper) == "function" then
         wallpaper = wallpaper(s)
     end
-    gears.wallpaper.maximized(wallpaper, 1, true)
+    gears.wallpaper.maximized(wallpaper, s, true)
     
     -- Tags
-    --awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
-    layout = { awful.layout.layouts[1], awful.layout.layouts[1], awful.layout.layouts[1], awful.layout.layouts[3], awful.layout.layouts[5], awful.layout.layouts[5]}
+    --awful.tag(awful.util.tagnames, s, awful.layout.layouts)
+    layout = { awful.layout.layouts[1], awful.layout.layouts[1], awful.layout.layouts[1], awful.layout.layouts[3], awful.layout.layouts[3], awful.layout.layouts[5]}
     awful.tag({ " </> ", " >_ ", " web ", " & ", " etc ", " # " }, s, layout)
+
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -458,20 +460,15 @@ function theme.connect(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
-
             arrow(theme.bg_normal, "#428bca"),
-            wibox.container.background(wibox.container.margin(wibox.widget { kbdwidget, layout = wibox.layout.align.horizontal }, 1, 1), "#428bca"),
+            wibox.container.background(wibox.container.margin(wibox.widget { vol_icon, volume_widget, layout = wibox.layout.align.horizontal }, 1, 1), "#428bca"),
             arrow("#428bca", "#f18e38"),
-            wibox.container.background(wibox.container.margin(wibox.widget { vol_icon, volume_widget, layout = wibox.layout.align.horizontal }, 1, 1), "#f18e38"),
+            wibox.container.background(wibox.container.margin(wibox.widget { temp_icon, temp.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#f18e38"), 
             arrow("#f18e38", "#b391db"),
-            wibox.container.background(wibox.container.margin(wibox.widget { fs_icon, theme.fs.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#b391db"),
+            wibox.container.background(wibox.container.margin(wibox.widget { cpu_icon, cpu.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#b391db"),
             arrow("#b391db", "#428bca"),
-            wibox.container.background(wibox.container.margin(wibox.widget { temp_icon, temp.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#428bca"), 
-            arrow("#428bca", "#f18e38"),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpu_icon, cpu.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#f18e38"),
-            arrow("#f18e38", "#b391db"),
-            wibox.container.background(wibox.container.margin(wibox.widget { mem_icon, mem.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#b391db"),
-            arrow("#b391db", theme.batcolor),
+            wibox.container.background(wibox.container.margin(wibox.widget { mem_icon, mem.widget, layout = wibox.layout.align.horizontal }, 1, 1), "#428bca"),
+            arrow("#428bca", theme.batcolor),
             wibox.container.background(wibox.container.margin(wibox.widget { bat_icon, bat_widget, bat.widget, layout = wibox.layout.align.horizontal }, 1, 1), theme.batcolor),
             arrow(theme.batcolor, "#f18e38"),
             wibox.container.background(wibox.container.margin(wibox.widget {clock_widget, layout = wibox.layout.align.horizontal }, 1, 1), "#f18e38"),
