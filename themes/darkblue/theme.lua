@@ -13,7 +13,7 @@ theme.dir                               = (
   or (os.getenv("HOME") .. "/.config")
 ) .. "/awesome/themes/darkblue"
 theme.wallpaper                         = theme.dir .. "/wallpapers/wall_3.jpg"
-theme.font                              = "Fantasque Sans Mono 14"
+theme.font                              = "FantasqueSansMono Nerd Font 14"
 theme.taglist_font                      = "Fantasque Sans Mono 12"
 theme.tasklist_font                     = "Fantasque Sans Mono 12"
 

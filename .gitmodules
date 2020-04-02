@@ -7,3 +7,9 @@
 [submodule "freedesktop"]
 	path = freedesktop
 	url = https://github.com/lcpz/awesome-freedesktop.git
+[submodule "radical"]
+	path = radical
+	url = https://github.com/Elv13/radical.git
+[submodule "vicious"]
+	path = vicious
+	url = https://github.com/vicious-widgets/vicious
