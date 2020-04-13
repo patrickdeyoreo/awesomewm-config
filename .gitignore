@@ -1,5 +1,11 @@
-rc.lua
-themes/darkblue/wallpapers/wall_1.png
-themes/darkblue/wallpapers/wall_2.png
-themes/darkblue/wallpapers/wall_3.png
-backlight
+*
+!rc.lua
+!themes/**
+!freedesktop/**
+!lain/**
+!radical/**
+!scratch/**
+!vicious/**
+!CONTRIBUTING*
+!LICENSE*
+!README*
