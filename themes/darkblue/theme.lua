@@ -5,17 +5,15 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
-local math, os, string = math, os, string
-
+local awesome, client, math, os, string = awesome, client, math, os, string
 local theme                             = {}
-theme.dir                               = (
-  os.getenv("XDG_CONFIG_HOME")
-  or (os.getenv("HOME") .. "/.config")
-) .. "/awesome/themes/darkblue"
-theme.wallpaper                         = theme.dir .. "/wallpapers/wall_3.jpg"
-theme.font                              = "FantasqueSansMono Nerd Font 14"
-theme.taglist_font                      = "Fantasque Sans Mono 12"
-theme.tasklist_font                     = "Fantasque Sans Mono 12"
+theme.name                              = "darkblue"
+theme.dir                               = string.format("%s/awesome/themes/%s",
+os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config"), theme.name)
+theme.wallpaper                         = theme.dir .. "/wallpapers/wall.png"
+theme.font                              = "mononoki NF 14"
+theme.taglist_font                      = "mononoki NF 14"
+theme.tasklist_font                     = "mononoki NF 14"
 
 theme.bg_normal                         = "#32302f"
 theme.fg_normal                         = "#a89984"
@@ -56,7 +54,7 @@ theme.titlebar_fg_focus                 = "#282828"
 theme.menu_height                       = dpi(24)
 theme.menu_width                        = dpi(192)
 
-theme.notification_font                 = "FantasqueSansMono Nerd Font 14"
+theme.notification_font                 = "mononoki NF 14"
 theme.notification_bg                   = theme.bg_normal
 theme.notification_fg                   = theme.fg_normal
 theme.notification_border_width         = 0
@@ -208,9 +206,9 @@ w17 = wibox.widget.imagebox(theme.w17)
 
 local clock_icon = wibox.widget.textbox("")
 clock_icon.border_width = 0
-clock_icon.font = "Fantasque Sans Mono 17"
+clock_icon.font = "JetBrains Mono Bold 14"
 local clock = awful.widget.textclock(
-"<span font=\"FantasqueSansMono Nerd Font 14\" color=\"#1e1e1e\"> %R %Z </span>")
+"<span font=\"mononoki NF 14\" color=\"#1e1e1e\"> %R %Z </span>")
 local clock_widget = wibox.container.background(
 wibox.container.margin(wibox.widget {
   clock_icon, clock, layout = wibox.layout.align.horizontal
@@ -219,9 +217,9 @@ wibox.container.margin(wibox.widget {
 
 local date_icon = wibox.widget.textbox("")
 date_icon.border_width = 0
-date_icon.font = "Fantasque Sans Mono 17"
+date_icon.font = "JetBrains Mono Bold 14"
 local date = awful.widget.textclock(
-"<span font=\"FantasqueSansMono Nerd Font 14\" color=\"#1e1e1e\"> %A %d %B %Y </span>")
+"<span font=\"mononoki NF 14\" color=\"#1e1e1e\"> %A %d %B %Y </span>")
 local date_widget = wibox.container.background(
 wibox.container.margin(wibox.widget {
   date_icon, date, layout = wibox.layout.align.horizontal
@@ -229,11 +227,11 @@ wibox.container.margin(wibox.widget {
 
 
 -- Calendar
-local calendar = lain.widget.calendar({
+local calendar = lain.widget.cal({
     cal = "ncal",
     attach_to = { date_widget },
     notification_preset = {
-        font = "Fantasque Sans Mono 16",
+        font = "mononoki NF 14",
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
@@ -358,7 +356,7 @@ wibox.widget {
 --local mem_icon = wibox.widget.imagebox(theme.widget_mem)
 local mem_icon = wibox.widget.textbox("")
 mem_icon.border_width = 0
-mem_icon.font = "Fantasque Sans Mono 17"
+mem_icon.font = "JetBrains Mono Bold 14"
 local mem = lain.widget.mem({
     settings = function()
         widget:set_markup(markup.font(theme.font, markup.fg.color(
@@ -377,7 +375,7 @@ wibox.widget {
 -- CPU
 local cpu_icon = wibox.widget.textbox("")
 cpu_icon.border_width = 0
-cpu_icon.font = "Fantasque Sans Mono 17"
+cpu_icon.font = "JetBrains Mono Bold 14"
 local cpu = lain.widget.cpu({
     settings = function()
         widget:set_markup(markup.font(theme.font, markup.fg.color(
@@ -395,7 +393,7 @@ wibox.widget {
 -- Coretemp (lain, average)
 local temp_icon = wibox.widget.textbox("  ")
 temp_icon.border_width = 0
-temp_icon.font = "Fantasque Sans Mono 17"
+temp_icon.font = "JetBrains Mono Bold 14"
 local temp = lain.widget.temp({
     settings = function()
         widget:set_markup(markup.font(theme.font, markup.fg.color(
@@ -424,6 +422,7 @@ wibox.widget {
   fs_icon, fs.widget, layout = wibox.layout.align.horizontal
 }, 0, 0), theme.yellow)
 --]]
+
 
 -- ALSA volume bar
 local vol_icon = wibox.widget.imagebox(theme.widget_vol)
@@ -537,7 +536,7 @@ teamviewer_button:buttons(awful.util.table.join(
 ))
 --]]
 
-function theme.connect(s)
+function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
@@ -547,17 +546,9 @@ function theme.connect(s)
         wallpaper = wallpaper(s)
     end
     gears.wallpaper.maximized(wallpaper, s, true)
-    
+
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
-    --[[
-    layout = {
-      awful.layout.layouts[2], awful.layout.layouts[2], awful.layout.layouts[2],
-      awful.layout.layouts[2], awful.layout.layouts[2], awful.layout.layouts[2],
-      awful.layout.layouts[2], awful.layout.layouts[2], awful.layout.layouts[2],
-    }
-    awful.tag({ " α ", " β ", " γ ", " δ ", " ε ", " ζ ", " η ", " θ ", " ι " }, s, layout)
-    ]]
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -565,10 +556,10 @@ function theme.connect(s)
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(awful.util.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+                           awful.button({}, 1, function () awful.layout.inc( 1) end),
+                           awful.button({}, 3, function () awful.layout.inc(-1) end),
+                           awful.button({}, 4, function () awful.layout.inc( 1) end),
+                           awful.button({}, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
 
@@ -576,7 +567,7 @@ function theme.connect(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 24, bg = theme.bg_normal, fg = theme.fg_focus,  })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = theme.bg_normal, fg = theme.fg_focus, })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -615,6 +606,7 @@ function theme.connect(s)
             -- Temp widget
             --temp_widget,
             --w5,
+            --]]
             -- Layout box
             s.mylayoutbox,
         },
