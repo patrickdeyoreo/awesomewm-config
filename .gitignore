@@ -1,6 +1,6 @@
 *
 !*/
-!/.git*
+!/.gitignore
 !/rc.lua
 !/themes/darkblue/**
 !/freedesktop/**
